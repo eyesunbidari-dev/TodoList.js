@@ -27,13 +27,15 @@ function createTodos(todos) {
   let result = "";
   todos.forEach((todo) => {
     result += `<li class="todo">
-      <p class="todo__title">${todo.title}</p>
+      <p class="todo__title ${todo.isCompleted && "completed"}">${
+      todo.title
+    }</p>
       <span class="todo__createdAt">${new Date(
         todo.createdAt
       ).toLocaleDateString("fa-IR")}</span>
-      <button data-todo-id=${
+      <button class="todo__check" data-todo-id=${
         todo.id
-      }><i class="todo__check far fa-check-square"></i></button>
+      }><i class=" far fa-check-square"></i></button>
       <button class="todo__remove" data-todo-id=${
         todo.id
       }><i class=" far fa-trash-alt"></i></button>
@@ -44,6 +46,8 @@ function createTodos(todos) {
 
   const removeBtns = [...document.querySelectorAll(".todo__remove")];
   removeBtns.forEach((btn) => btn.addEventListener("click", removeTodo));
+  const checkBtn = [...document.querySelectorAll(".todo__check")];
+  checkBtn.forEach((btn) => btn.addEventListener("click", checkTodo));
 }
 
 function filterTodos(e) {
@@ -70,5 +74,11 @@ function filterTodos(e) {
 function removeTodo(e) {
   const todoId = Number(e.target.dataset.todoId);
   todos = todos.filter((t) => t.id !== todoId);
+  createTodos(todos);
+}
+function checkTodo(e) {
+  const todoId = Number(e.target.dataset.todoId);
+  const todo = todos.find((t) => t.id === todoId);
+  todo.isCompleted = !todo.isCompleted;
   createTodos(todos);
 }
